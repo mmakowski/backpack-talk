@@ -1,0 +1,97 @@
+\documentclass[11pt,twoside,a4paper]{article} % scrartcl
+
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listings} 
+
+\bibliographystyle{alpha}
+
+\begin{document}
+
+\title{Modularity and Backpack}
+\author{Maciek Makowski (\texttt{@mmakowski})}
+\maketitle
+
+\newcommand{\code}[1]{\textit{#1}}
+
+\section{ML Module System}
+
+As far as module systems go, the ML module system is often considered to offer the best combination of expressive power with good theoretical properties\cite{Dreyer05}. It is instructive to have a brief look at this venerable system to see what Haskell is missing.
+
+\subsection{Structures}
+
+Similarly to Haskell, some of the objects that can be defined at the top level of an ML program are functions, data types, type aliases and constants. These can be grouped into modules called structures:
+
+\begin{lstlisting}[language=ML]
+structure IntInteger =
+  struct
+    type integer = int
+    val zero = 0
+    fun add a b = a + b
+    fun mul a b = a * b
+  end
+\end{lstlisting}
+This is a definition of structure \code{IntInteger} which contains a type alias \code{integer} for \code{int}, a constant \code{zero} and two functions, \code{add} and \code{mul}. 
+
+\subsection{Signatures}
+
+Structures represent concrete modules. Abstract interfaces of modules can be represented as singatures. For example, our \code{IntInteger} structure matches the following signature:
+\begin{lstlisting}[language=ML]
+signature INTEGER =
+  sig
+    type integer
+    val zero: integer
+    fun add: integer -> integer -> integer
+    fun mul: integer -> integer -> integer
+  end
+\end{lstlisting}
+The structure can then be declared to implement a given signature:
+\begin{lstlisting}[language=ML]
+structure IntInteger: INTEGER = ...
+\end{lstlisting}
+
+\subsection{Functors}
+
+Modules parameterised by other modules can be represented as functors. For example, given a module implementing natural numbers we can define rational numbers as follows:
+\begin{lstlisting}[language=ML]
+functor RationalFun(I: INTEGER) =
+  struct
+    type rational = I.integer * I.integer
+    fun nom r   = #1 r
+    fun denom r = #2 r
+    fun add r1 r2 = 
+      (I.add (I.mul (nom r1) (denom r2) 
+             (I.mul (nom r2) (denom r1)),
+       I.mul (denom r1) (denom r2)))
+  end
+\end{lstlisting}
+
+\section{Haskell Backpack}
+
+\subsection{Packages and Modules}
+
+TODO
+
+\subsection{Includes}
+
+TODO
+
+\subsection{Holes}
+
+TODO
+
+\subsection{Signature Packages}
+
+TODO
+
+\subsection{Linking}
+
+TODO
+
+Recursive linking possible -- better than ML.
+
+\begin{thebibliography}{9}
+	\bibitem[Dreyer05]{Dreyer05} Derek Dreyer, \emph{Understanding and Evolving the ML Module System}, \url{https://www.mpi-sws.org/~dreyer/thesis/main.pdf}
+\end{thebibliography}
+
+\end{document}
