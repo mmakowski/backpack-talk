@@ -12,7 +12,7 @@
 \author{Maciek Makowski (\texttt{@mmakowski})}
 \maketitle
 
-\newcommand{\code}[1]{\textit{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
 
 \section{ML Module System}
 
@@ -66,23 +66,33 @@ functor RationalFun(I: INTEGER) =
   end
 \end{lstlisting}
 
+TODO: instantiation
+
 \section{Haskell Backpack}
 
 \subsection{Packages and Modules}
 
-TODO
+A direct translation of the \code{IntInteger} structure from the ML example to Backpack looks as follows:
 
-\subsection{Includes}
-
-TODO
-
-\subsection{Holes}
-
-TODO
+\begin{lstlisting}[language=Haskell]
+package int-integer where
+  IntInteger = [
+    type Integer = Int
+    zero = 0
+    add a b = a + b
+    mul a b = a * b
+  ]
+\end{lstlisting}
+\code{int-integer} is the name of the \emph{package} -- a new concept introduced by backpack. A package consists of one ore more \emph{modules}, which are defined using existing Haskell module syntax.
 
 \subsection{Signature Packages}
 
-TODO
+\begin{lstlisting}[language=Haskell]
+package integer-sig where
+  Integer = [
+    type Integer
+  ]
+\end{lstlisting}
 
 \subsection{Linking}
 
@@ -91,6 +101,7 @@ TODO
 Recursive linking possible -- better than ML.
 
 \begin{thebibliography}{9}
+	\bibitem[Backpack]{Backpack} Scott Kilpatrick, Derek Dreyer, Simon Peyton Jones, Simon Marlow, \emph{Backpack: Retrofitting Haskell with Interfaces}, \url{http://plv.mpi-sws.org/backpack/backpack-paper.pdf}
 	\bibitem[Dreyer05]{Dreyer05} Derek Dreyer, \emph{Understanding and Evolving the ML Module System}, \url{https://www.mpi-sws.org/~dreyer/thesis/main.pdf}
 \end{thebibliography}
 
