@@ -2,6 +2,9 @@
 
 \usepackage[UKenglish]{isodate}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{listings}
 \usepackage{lmodern}
 
 \usecolortheme{dove}
@@ -17,16 +20,129 @@
 
 % -------------------------------------------
 \begin{frame}{MirageOS}
+TODO picture of unikernel
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}{MirageOS}
 TODO picture of HTTP app with dependencies
 \end{frame}
 
 % -------------------------------------------
-\begin{frame}{Exhibit 1}
+\begin{frame}{Exhibit 1}{MirageOS}
 \begin{quote}
 The compiler heavily emphasises static type checking, and the resulting binaries are fast native code with no runtime type information and the module system is among the most powerful in a general-purpose programming language in terms of permitting flexible and safe code reuse and refactoring.
 \end{quote}
--- Technical Background of Mirage
+-- Technical Background of MirageOS
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{ML Modules}{Structures}
+\begin{lstlisting}[language=ML]
+structure IntInteger =
+  struct
+    type integer = int
+    val zero = 0
+    val succ n = n + 1
+    fun add a b = a + b
+    fun mul a b = a * b
+  end
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{ML Modules}{Signatures}
+\begin{lstlisting}[language=ML]
+signature INTEGER =
+  sig
+    type integer
+    val zero: integer
+    val succ: integer -> integer
+    fun add: integer -> integer -> integer
+    fun mul: integer -> integer -> integer
+  end
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{ML Modules}{Functors}
+\begin{lstlisting}[language=ML]
+functor RationalFun(I: INTEGER) =
+  struct
+    type rational = I.integer * I.integer
+    fun nom (n, _) = n
+    fun denom (_, d) = d
+    fun add (n1, d1) (n2, d2) =
+      (I.add (I.mul n1 d2) (I.mul n2 d1),
+       I.mul d1 d2)
+  end
+
+structure IntRational = RationalFun(IntInteger)
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}{ML Modules}
+TODO: Mirage app diagram
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Exhibit 2}{tagstream-conduit}
+\begin{lstlisting}[language=Haskell]
+data Dec builder string = Dec
+  { decToS     :: builder -> string
+  , decBreak   :: (Char -> Bool) -> string ->
+                  (string, string)
+  , decBuilder :: string -> builder
+  , decDrop    :: Int -> string -> string
+  , decEntity  :: string -> Maybe string
+  , decUncons  :: string -> Maybe (Char, string)
+  }
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Exhibit 3}{tagsoup}
+\begin{lstlisting}[language=Haskell]
+class (Typeable a, Eq a) => StringLike a where
+    empty      :: a
+    cons       :: Char -> a -> a
+    uncons     :: a -> Maybe (Char, a)
+    toString   :: a -> String
+    fromString :: String -> a
+    -- [...]
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Signatures}
+\begin{lstlisting}[language=Haskell]
+module IntegerSig where
+
+data Integer
+
+zero :: Integer
+succ :: Integer
+add  :: Integer -> Integer -> Integer
+mul  :: Integer -> Integer -> Integer
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Modules}
+\begin{lstlisting}[language=Haskell]
+module Rational where
+
+import qualified IntegerSig as I
+
+data Rational = R I.Integer I.Integer
+
+nom (R n _) = n
+denom (R _ d) = d
+add (R n1 d1) (R n2 d2) =
+  R (I.add (I.mul n1 d2) (I.mul n2 d1))
+    (I.mul d1 d2)
+\end{lstlisting}
 \end{frame}
 
 \end{document}
-
