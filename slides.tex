@@ -9,6 +9,8 @@
 
 \usecolortheme{dove}
 \setbeamertemplate{navigation symbols}{}
+\lstset{frame=lrbt}
+
 
 \begin{document}
 
@@ -92,11 +94,11 @@ TODO: Mirage app diagram
 data Dec builder string = Dec
   { decToS     :: builder -> string
   , decBreak   :: (Char -> Bool) -> string ->
-                  (string, string)
+                  (string,string)
   , decBuilder :: string -> builder
   , decDrop    :: Int -> string -> string
   , decEntity  :: string -> Maybe string
-  , decUncons  :: string -> Maybe (Char, string)
+  , decUncons  :: string -> Maybe (Char,string)
   }
 \end{lstlisting}
 \end{frame}
@@ -142,6 +144,45 @@ denom (R _ d) = d
 add (R n1 d1) (R n2 d2) =
   R (I.add (I.mul n1 d2) (I.mul n2 d1))
     (I.mul d1 d2)
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Cabal packages}
+\begin{lstlisting}[title=Integer signature package]
+name:               integer-sig
+version:            1.0
+indefinite:         True
+exposed-signatures: IntegerSig
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Cabal packages}
+\begin{lstlisting}[title=Integer implementation package]
+name:            integer-int
+exposed-modules: IntegerInt
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Cabal packages}
+\begin{lstlisting}[title=Rational ``functor'' package]
+name:            rational
+indefinite:      True
+build-depends:   integer-sig-1.0
+exposed-modules: Rational
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Mixing in}
+\begin{lstlisting}[title=Rationals based on Integers]
+name:               rational-int
+build-depends:
+  integer (IntegerInt as IntegerSig),
+  rational
+reexported-modules: Rational
 \end{lstlisting}
 \end{frame}
 

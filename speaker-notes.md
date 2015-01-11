@@ -30,7 +30,7 @@
     * carrier types have to be made visible (why would anyone care about my representation of integer type in `RationalSig`)?
 
 -> Exhibit 3: tagsoup "functor"
-* We use type classes to describe signatures
+* We use type classes to describe signatures. A functor would be an instance of a type class with constraint representing the parameterising singature.
 * TODO: what's wrong with this approach?
     * more difficult type inference
     * it is often recommended that type classes are used for abstractions that are governed by specific laws (e.g. algebraic constructs); StringLike does not have such laws and thus breaks expectations
@@ -39,7 +39,7 @@
 
 * Backpack will provide a better way. New constructs to compose modules without hackery.
 * Haskell already has structures -- those are existing modules.
-* Signature modules: `hsig` extension, just function types, and type declarations, no definitions
+* Signature modules: `hsig` extension, just function types, and type declarations, no definitions. The declarations are also called "holes".
 * Key difference to ML modules: no functors. Instead, modules can depend on signatures, and implementations are mixed in at compile time.
 
 TODO: making it practical: cabal
