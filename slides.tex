@@ -26,6 +26,12 @@
   morestring=[b]',
   morestring=[b]"""
 }
+\lstdefinelanguage{cabal}{
+  alsoletter={-},
+  morekeywords={name,version,indefinite,exposed-signatures,exposed-modules,build-depends,reexported-modules},
+  sensitive=true
+}
+
 
 \begin{document}
 
@@ -117,8 +123,7 @@ object IntInteger extends IntegerSig {
 }
 \end{lstlisting}
 \begin{lstlisting}[language=Scala,title=class \textasciitilde\ functor]
-class RationalFun[I <: IntegerSig]
-                 (i: IntegerSig) {
+class RationalFun[I <: IntegerSig](i: I) {
   type Rational = (I#Integer, I#Integer)
 }
 \end{lstlisting}
@@ -185,7 +190,7 @@ add (R n1 d1) (R n2 d2) =
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Cabal packages}
-\begin{lstlisting}[title=Integer signature package]
+\begin{lstlisting}[language=Cabal,title=Integer signature package]
 name:               integer-sig
 version:            1.0
 indefinite:         True
@@ -195,7 +200,7 @@ exposed-signatures: IntegerSig
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Cabal packages}
-\begin{lstlisting}[title=Integer implementation package]
+\begin{lstlisting}[language=Cabal,title=Integer implementation package]
 name:            integer-int
 exposed-modules: IntegerInt
 \end{lstlisting}
@@ -203,7 +208,7 @@ exposed-modules: IntegerInt
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Cabal packages}
-\begin{lstlisting}[title=Rational ``functor'' package]
+\begin{lstlisting}[language=Cabal,title=Rational ``functor'' package]
 name:            rational
 indefinite:      True
 build-depends:   integer-sig-1.0
@@ -213,7 +218,7 @@ exposed-modules: Rational
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Mixing in}
-\begin{lstlisting}[title=Rationals based on Integers]
+\begin{lstlisting}[language=Cabal,title=Rationals based on Integers]
 name:               rational-int
 build-depends:
   integer (IntegerInt as IntegerSig),
