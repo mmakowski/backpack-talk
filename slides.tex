@@ -10,7 +10,22 @@
 \usecolortheme{dove}
 \setbeamertemplate{navigation symbols}{}
 \lstset{frame=lrbt}
-
+\lstdefinelanguage{scala}{
+  morekeywords={abstract,case,catch,class,def,%
+    do,else,extends,false,final,finally,%
+    for,if,implicit,import,match,mixin,%
+    new,null,object,override,package,%
+    private,protected,requires,return,sealed,%
+    super,this,throw,trait,true,try,%
+    type,val,var,while,with,yield},
+  otherkeywords={=>,<-,<\%,<:,>:,\#,@},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[n]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]"""
+}
 
 \begin{document}
 
@@ -45,7 +60,7 @@ structure IntInteger =
   struct
     type integer = int
     val zero = 0
-    val succ n = n + 1
+    fun succ n = n + 1
     fun add a b = a + b
     fun mul a b = a * b
   end
@@ -60,8 +75,8 @@ signature INTEGER =
     type integer
     val zero: integer
     val succ: integer -> integer
-    fun add: integer -> integer -> integer
-    fun mul: integer -> integer -> integer
+    val add: integer -> integer -> integer
+    val mul: integer -> integer -> integer
   end
 \end{lstlisting}
 \end{frame}
@@ -78,7 +93,8 @@ functor RationalFun(I: INTEGER) =
       (I.add (I.mul n1 d2) (I.mul n2 d1),
        I.mul d1 d2)
   end
-
+\end{lstlisting}
+\begin{lstlisting}[language=ML]
 structure IntRational = RationalFun(IntInteger)
 \end{lstlisting}
 \end{frame}
@@ -86,6 +102,26 @@ structure IntRational = RationalFun(IntInteger)
 % -------------------------------------------
 \begin{frame}{ML Modules}
 TODO: Mirage app diagram
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Sidebar}{Scala}
+\begin{lstlisting}[language=Scala,title=trait \textasciitilde\ signature]
+trait IntegerSig {
+  type Integer
+}
+\end{lstlisting}
+\begin{lstlisting}[language=Scala,title=object \textasciitilde\ structure]
+object IntInteger extends IntegerSig {
+  type Integer = Int
+}
+\end{lstlisting}
+\begin{lstlisting}[language=Scala,title=class \textasciitilde\ functor]
+class RationalFun[I <: IntegerSig]
+                 (i: IntegerSig) {
+  type Rational = (I#Integer, I#Integer)
+}
+\end{lstlisting}
 \end{frame}
 
 % -------------------------------------------

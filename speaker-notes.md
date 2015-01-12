@@ -21,6 +21,7 @@
     * structures can match signatures; the matching is structural, not nominal like in mainstream OO
     * functors take structures that implement specified signatures as arguments and produces another structure
     * so e.g. `Cohttp` is a functor that given a structure that matches signature `TCP` yields a structure that matches signature `HTTP`. Two different structures that match `TCP` can be produced using `MirTCP` and `UnixSocket` functors.
+* TODO: OO, scala
 * Haskell does not have similar facilities for parameterising modules
 * Programmers try to roll their own
 -> Exhibit 2: tagstream "functor"
