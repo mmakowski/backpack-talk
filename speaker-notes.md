@@ -1,5 +1,6 @@
-
-* I'm interested in writing good software and the state of the art
+* I would like to blame Derek for making me commit to this talk, but I only have myself to blame. A while ago I struggled to understand the design behind Backpack -- which will be subject of this talk -- and thought "what better way to learn than to deliver a talk on it?". After I told Derek "sure, I'll do it" I realised that most of the info about it is in very technical papers that deal with semantics of the system and assume a fair bit of background knowledge. There is no working implementation yet. The only approachable info is on Edward's blog.
+* Well, there you go. I'm going to be talking about new developments in Haskell in front of some of the most accomplished Haskell developers out there. Scary.
+* Myself, I don't know much about Haskell. The first time I've used it was over 10 years ago, but after completing a medium-sized project I never had a chance to work with it again. I'm interested in writing good software and the state of the art though, so I attend FP meetups and conferences.
 * Mostly I don't like what I see in the software world, but every once in a while I see a piece of software that makes me say "Wow! That is elegant!"
 * One of those moments was when a year ago Anil Madhavapeddy spoke about MirageOS at FPX conference.
 * Mirage is a system for deploying applications to bare metal (actually, Xen) without intermediary OS
@@ -42,5 +43,14 @@
 * Haskell already has structures -- those are existing modules.
 * Signature modules: `hsig` extension, just function types, and type declarations, no definitions. The declarations are also called "holes".
 * Key difference to ML modules: no functors. Instead, modules can depend on signatures, and implementations are mixed in at compile time.
+* How is it going to be assembled together? Via cabal. I will show how based on the finest-grained package layout possible -- each module and signature in its own package -- but bear in mind this is not required, you can have packages which aggregate signatures and modules. See Edward's post "A taste of cabalized backpack".
+* A "pure signature package" exposes `IntegerSig`
+* The implementation package exposes a fully implemented module. Note that it does not refer to `integer-sig` anywhere.
+* The "functor" package is indefinite, because it depends on the signature
+* Finally, the "mixin" (or "functor application") package does not contain any code, just specifies which packages need to be combined to produce a fully defined implementation of Rational.
+* Note: here we defined signature in a separate package. In this example it would have been equally appropriate for the `rational` package to internally specify the signature it depends on.
 
-TODO: making it practical: cabal
+TODO: versioning of signatures
+TODO: I always viewed cabal as yet another build tool. Now it is clear that Cabal is actually the language for programming in-the-large
+TODO: how is it better (Scott's comment), double-vision problem
+TODO: applicative vs generative semantics
