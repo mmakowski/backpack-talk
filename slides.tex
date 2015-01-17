@@ -158,6 +158,20 @@ class (Typeable a, Eq a) => StringLike a where
 \end{frame}
 
 % -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Modules}
+\begin{lstlisting}[language=Haskell]
+module IntegerInt where
+
+type Integer = Int
+
+zero = 0
+succ = (+1)
+add = (+)
+mul = (*)
+\end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Signatures}
 \begin{lstlisting}[language=Haskell]
 module IntegerSig where
@@ -225,6 +239,25 @@ build-depends:
   rational
 reexported-modules: Rational as RationalInt
 \end{lstlisting}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Instantiation Semantics}
+\begin{lstlisting}[language=ML]
+functor RationalFunD(I: INTEGER) =
+  struct
+    datatype rational =
+      R of I.integer * I.integer
+    val zero = R (I.zero, I.succ I.zero)
+  end
+structure R1 = RationalFunD(IntInteger)
+structure R2 = RationalFunD(IntInteger)
+\end{lstlisting}
+Is R1.rational the same type as R2.rational?
+\begin{itemize}
+\item \textit{generative}: no
+\item \textit{applicative}: yes
+\end{itemize}
 \end{frame}
 
 \end{document}

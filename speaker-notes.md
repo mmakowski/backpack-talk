@@ -49,8 +49,9 @@
 * The "functor" package is indefinite, because it depends on the signature
 * Finally, the "mixin" (or "functor application") package does not contain any code, just specifies which packages need to be combined to produce a fully defined implementation of Rational.
 * Note: here we defined signature in a separate package. In this example it would have been equally appropriate for the `rational` package to internally specify the signature it depends on.
+* Note the version we specified for signature. A given module can match multiple signatures and multiple signature versions. The version is meant to also capture semantics which can't be specified in Haskell.
+* Note that mixing-in (i.e. application of functor) happens in cabal files. I always viewed cabal as yet another build tool. Now it is clear that Cabal is actually the language for programming in-the-large
 
-TODO: versioning of signatures
-TODO: I always viewed cabal as yet another build tool. Now it is clear that Cabal is actually the language for programming in-the-large
-TODO: how is it better (Scott's comment), double-vision problem
 TODO: applicative vs generative semantics
+TODO: how is it better (Scott's comment), double-vision problem
+TODO: practical considerations: compatibility with existing Haskell code and toolchain
