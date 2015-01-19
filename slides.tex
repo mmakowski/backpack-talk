@@ -6,6 +6,8 @@
 \usepackage{textcomp}
 \usepackage{listings}
 \usepackage{lmodern}
+\usepackage{pgf}
+\usepackage{tikz}
 
 \usecolortheme{dove}
 \setbeamertemplate{navigation symbols}{}
@@ -30,6 +32,17 @@
   alsoletter={-},
   morekeywords={name,version,indefinite,exposed-signatures,exposed-modules,build-depends,reexported-modules},
   sensitive=true
+}
+\usetikzlibrary{arrows,automata,positioning}
+\tikzset{
+    state/.style={
+           rectangle,
+           rounded corners,
+           draw=black,
+           minimum height=2em,
+           inner sep=2pt,
+           text centered,
+           },
 }
 
 
@@ -204,19 +217,19 @@ add (R n1 d1) (R n2 d2) =
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Cabal packages}
-\begin{lstlisting}[language=Cabal,title=Integer signature package]
-name:               integer-sig
-version:            1.0
-indefinite:         True
-exposed-signatures: IntegerSig
+\begin{lstlisting}[language=Cabal,title=Integer implementation package]
+name:            integer-int
+exposed-modules: IntegerInt
 \end{lstlisting}
 \end{frame}
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Cabal packages}
-\begin{lstlisting}[language=Cabal,title=Integer implementation package]
-name:            integer-int
-exposed-modules: IntegerInt
+\begin{lstlisting}[language=Cabal,title=Integer signature package]
+name:               integer-sig
+version:            1.0
+indefinite:         True
+exposed-signatures: IntegerSig
 \end{lstlisting}
 \end{frame}
 
@@ -242,6 +255,22 @@ reexported-modules: Rational as RationalInt
 \end{frame}
 
 % -------------------------------------------
+\begin{frame}{Backpack}{Package hierarchy}
+\makebox[\textwidth][c]{
+\begin{tikzpicture}[->,>=stealth']
+\node[state](integersig){integer-sig};
+\node[state,right of=integersig,node distance=4cm](integerint){integer-int};
+\node[state,below of=integersig,node distance=2cm](rational){rational};
+\node[state,below of=rational,node distance=2cm,xshift=2cm](rationalint){rational-int};
+\path (rationalint.120) edge[out=90,in=-90] (rational)
+      (rationalint.60) edge[out=90,in=-90] (integerint)
+      (rational) edge (integersig);
+\draw[dotted,-] (integersig) -- (integerint);
+\end{tikzpicture}
+}
+\end{frame}
+
+% -------------------------------------------
 \begin{frame}[fragile]{Instantiation Semantics}
 \begin{lstlisting}[language=ML]
 functor RationalFunD(I: INTEGER) =
@@ -258,6 +287,11 @@ Is R1.rational the same type as R2.rational?
 \item \textit{generative}: no
 \item \textit{applicative}: yes
 \end{itemize}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{Backpack}{Recursive linking}
+TODO: dependency diagram (ab-sigs, a-from-b, b-from-a, a-rec-sep)
 \end{frame}
 
 % -------------------------------------------
