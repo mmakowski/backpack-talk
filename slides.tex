@@ -124,7 +124,7 @@ TODO: Mirage app diagram
 \end{frame}
 
 % -------------------------------------------
-\begin{frame}[fragile]{Sidebar}{Scala}
+\begin{frame}[fragile]{Scala}
 \begin{lstlisting}[language=Scala,title=trait \textasciitilde\ signature]
 trait IntegerSig {
   type Integer
@@ -291,7 +291,40 @@ Is R1.rational the same type as R2.rational?
 
 % -------------------------------------------
 \begin{frame}[fragile]{Backpack}{Recursive linking}
-TODO: dependency diagram (ab-sigs, a-from-b, b-from-a, a-rec-sep)
+\makebox[\textwidth][c]{
+\begin{tikzpicture}[->,>=stealth']
+\node[state](absigs){
+  \begin{tabular}{l}
+    \textbf{ab-sigs}\\
+    \texttt{module A where ...}\\
+    \texttt{module B where ...}
+  \end{tabular}
+};
+\node[state,below of=absigs,node distance=2.8cm,xshift=-2.5cm](afromb){
+  \begin{tabular}{l}
+    \textbf{a-from-b}\\
+    \texttt{module A where}\\
+    \texttt{import B ...}
+  \end{tabular}
+};
+\node[state,below of=absigs,node distance=2.8cm,xshift=2.5cm](bfroma){
+  \begin{tabular}{l}
+    \textbf{b-from-a}\\
+    \texttt{module B where}\\
+    \texttt{import A ...}
+  \end{tabular}
+};
+\node[state,below of=absigs,node distance=5.2cm](abrecsep){
+  \begin{tabular}{l}
+    \textbf{ab-rec-sep}
+  \end{tabular}
+};
+\path (afromb.60) edge[out=90,in=-90] (absigs.240)
+      (bfroma.120) edge[out=90,in=-90] (absigs.300)
+      (abrecsep.120) edge[out=90,in=-90] (afromb.300)
+      (abrecsep.60) edge[out=90,in=-90] (bfroma.240);
+\end{tikzpicture}
+}
 \end{frame}
 
 % -------------------------------------------
