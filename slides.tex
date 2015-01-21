@@ -39,7 +39,7 @@
            rectangle,
            rounded corners,
            draw=black,
-           minimum height=2em,
+           minimum height=1.5em,
            inner sep=2pt,
            text centered,
            },
@@ -56,12 +56,45 @@
 
 % -------------------------------------------
 \begin{frame}{MirageOS}
-TODO picture of unikernel
+\makebox[\textwidth][c]{
+\includegraphics[width=12cm]{unikernel.png}
+}
 \end{frame}
 
 % -------------------------------------------
 \begin{frame}{MirageOS}
-TODO picture of HTTP app with dependencies
+\makebox[\textwidth][c]{
+\begin{tikzpicture}[
+  ->,>=stealth',
+  node distance=3em,
+  xen/.style={fill=blue!20},
+  unix/.style={fill=red!20},
+  mir/.style={fill=green!20}]
+\node[state,xen](xenboot){XenBoot};
+\node[state,xen,below of=xenboot,xshift=-5em](xenstore){XenStore};
+\node[state,xen,below of=xenboot,xshift=5em](xenevtchn){XenEvtchn};
+\node[state,xen,below of=xenstore,xshift=5em](xenring){XenRing};
+\node[state,xen,below of=xenring](xennetif){XenNetif};
+\node[state,mir,below of=xennetif,xshift=4.5em](mirnet){MirNet};
+\node[state,mir,below of=mirnet](mirtcp){MirTCP};
+\node[state,mir,below of=mirtcp](cohttp){Cohttp};
+\node[state,fill=gray!20,left of=cohttp,node distance=10em](myhomepage){MyHomePage};
+\node[state,unix,right of=xenboot,node distance=12em](unixelf){UnixELF};
+\node[state,unix,below of=unixelf,node distance=9em](unixturntap){UnixTurntap};
+
+\path (myhomepage) edge (cohttp)
+      (cohttp) edge (mirtcp)
+      (mirtcp) edge (mirnet)
+      (mirnet.120) edge[out=90,in=-90,dashed] (xennetif)
+      (mirnet.60) edge[out=90,in=-90,dashed] (unixturntap)
+      (xennetif) edge (xenring)
+      (xenring.120) edge[out=90,in=-90] (xenstore)
+      (xenring.60) edge[out=90,in=-90] (xenevtchn)
+      (xenstore) edge[out=90,in=-90] (xenboot.240)
+      (xenevtchn) edge[out=90,in=-90] (xenboot.300)
+      (unixturntap) edge (unixelf);
+\end{tikzpicture}
+}
 \end{frame}
 
 % -------------------------------------------
@@ -120,7 +153,48 @@ structure IntRational = RationalFun(IntInteger)
 
 % -------------------------------------------
 \begin{frame}{ML Modules}
-TODO: Mirage app diagram
+\makebox[\textwidth][c]{
+\begin{tikzpicture}[
+  ->,>=stealth',
+  node distance=3em,
+  xen/.style={fill=blue!20},
+  unix/.style={fill=red!20},
+  mir/.style={fill=green!20}]
+\node[state,xen](xenboot){XenBoot:XEN};
+\node[state,xen,below of=xenboot,xshift=-5em](xenstore){XenStore:XS(XEN)};
+\node[state,xen,below of=xenboot,xshift=5em](xenevtchn){XenEvtchn:EVENT(XEN)};
+\node[state,xen,below of=xenstore,xshift=5em](xenring){XenRing:RING(XS)(EVENT)};
+\node[state,xen,below of=xenring](xennetif){XenNetif:NETIF(XEN)(RING)};
+\node[state,mir,below of=xennetif,xshift=4.5em](mirnet){MirNet:ETH(NETIF)};
+\node[state,mir,below of=mirnet](mirtcp){MirTCP:TCP(ETH)};
+\node[state,mir,below of=mirtcp](cohttp){Cohttp:HTTP(TCP)};
+\node[state,fill=gray!20,left of=cohttp,node distance=10em](myhomepage){
+\begin{tabular}{l}
+MyHomePage:\\
+APP(HTTP)
+\end{tabular}
+};
+\node[state,unix,right of=xenboot,node distance=12em](unixelf){UnixELF:UNIX};
+\node[state,unix,below of=unixelf,node distance=7em](unixturntap){
+\begin{tabular}{l}
+	UnixTurntap:\\
+	NETIF(UNIX)
+\end{tabular}
+};
+
+\path (myhomepage) edge (cohttp)
+      (cohttp) edge (mirtcp)
+      (mirtcp) edge (mirnet)
+      (mirnet.120) edge[out=90,in=-90,dashed] (xennetif)
+      (mirnet.60) edge[out=90,in=-90,dashed] (unixturntap)
+      (xennetif) edge (xenring)
+      (xenring.120) edge[out=90,in=-90] (xenstore)
+      (xenring.60) edge[out=90,in=-90] (xenevtchn)
+      (xenstore) edge[out=90,in=-90] (xenboot.240)
+      (xenevtchn) edge[out=90,in=-90] (xenboot.300)
+      (unixturntap) edge (unixelf);
+\end{tikzpicture}
+}
 \end{frame}
 
 % -------------------------------------------
