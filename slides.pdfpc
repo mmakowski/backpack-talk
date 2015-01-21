@@ -1,0 +1,56 @@
+[file]
+slides.pdf
+[notes]
+### 2
+* mirage: system for deploying application to bare metal
+* traditional software stack has large attack surface and is inefficient
+* Mirage unikernels have size of hundreds of kilobytes and boot up in milliseconds
+### 3
+* it would be inconvenient to have to run and debug an app on Xen
+* Mirage allows to develop by linking against Unix backend
+* Then linked against Xen backend for production deployment
+
+* What language is Mirage written in?
+### 4
+-> read
+
+* It is not Haskell; it's Ocaml
+* Why did they choose relatively obscure Ocaml?
+* It's a systems programming language with strong type system
+* Module system
+* ML family of languages splits the language into in-the-small and in-the-large constructs
+* in-the-small similar to haskell: algebraic data types, functions
+* in-the-large: modules
+* what does module language look like?
+
+### 5
+* Structure: like Haskell module; definitions of types and functions
+### 6
+* Structures: module interfaces
+### 7
+* Functors take structures that match specified signatures as arguments and produce another structure
+* Note that structure does not have to declare that it matches a signature
+### 8
+* MyHomePage is a functor that produces an APP given a structure matching HTTP signature
+* Cohttp is a functor that produces an HTTP given TCP
+* MirNet requires NETIF to make an ETH, this can be provided either by XenNetif or by UnixTurntap
+### 9
+* One view of OO treats is as approach in which modules are first-class (i.e. can be stored, passed into and returned from functions)
+* This is how (to some level of accuracy) one could encode ML modules in Scala
+* Major difference: in ML one did not have to declare structure matches a singature, compiler was checking that structurally
+* In scala matching is nominal -- only structures marked as matching signatures are accepted
+* more differences to do with path-dependent types vs sharing constraints
+### 10
+* Haskell does not have language for programming in-the-large
+* Attempt to use Haskells in-the-small features for this, often to do with different string implementations
+* This is a record of functions parameterised by two types -- a variant of functor
+### 11
+* tagsoup uses type classes to describe signatures
+* functor would be function that takes an IntegerSig a and produces a RationalSig a
+* what's wrong:
+  - more difficult type inference
+  - abuse of type classes (no laws)
+  - forces programmer to constantly abstract over string type and apply, even though most likely the string type is going to be the same in entire app
+
+* alternatives: duplicated code, no parametricity
+* Backpack will provide a better way: new constructs to compose modules without hackery
