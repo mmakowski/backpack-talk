@@ -80,7 +80,7 @@
 \node[state,mir,below of=mirtcp](cohttp){Cohttp};
 \node[state,fill=gray!20,left of=cohttp,node distance=10em](myhomepage){MyHomePage};
 \node[state,unix,right of=xenboot,node distance=12em](unixelf){UnixELF};
-\node[state,unix,below of=unixelf,node distance=9em](unixturntap){UnixTurntap};
+\node[state,unix,below of=unixelf,node distance=7em](unixturntap){UnixTurntap};
 
 \path (myhomepage) edge (cohttp)
       (cohttp) edge (mirtcp)
@@ -160,27 +160,17 @@ structure IntRational = RationalFun(IntInteger)
   xen/.style={fill=blue!20},
   unix/.style={fill=red!20},
   mir/.style={fill=green!20}]
-\node[state,xen](xenboot){XenBoot:XEN};
-\node[state,xen,below of=xenboot,xshift=-5em](xenstore){XenStore:XS(XEN)};
-\node[state,xen,below of=xenboot,xshift=5em](xenevtchn){XenEvtchn:EVENT(XEN)};
-\node[state,xen,below of=xenstore,xshift=5em](xenring){XenRing:RING(XS)(EVENT)};
-\node[state,xen,below of=xenring](xennetif){XenNetif:NETIF(XEN)(RING)};
-\node[state,mir,below of=xennetif,xshift=4.5em](mirnet){MirNet:ETH(NETIF)};
-\node[state,mir,below of=mirnet](mirtcp){MirTCP:TCP(ETH)};
-\node[state,mir,below of=mirtcp](cohttp){Cohttp:HTTP(TCP)};
-\node[state,fill=gray!20,left of=cohttp,node distance=10em](myhomepage){
-\begin{tabular}{l}
-MyHomePage:\\
-APP(HTTP)
-\end{tabular}
-};
-\node[state,unix,right of=xenboot,node distance=12em](unixelf){UnixELF:UNIX};
-\node[state,unix,below of=unixelf,node distance=7em](unixturntap){
-\begin{tabular}{l}
-	UnixTurntap:\\
-	NETIF(UNIX)
-\end{tabular}
-};
+\node[state,xen](xenboot){XEN};
+\node[state,xen,below of=xenboot,xshift=-5em](xenstore){XEN $\rightarrow$ XS};
+\node[state,xen,below of=xenboot,xshift=5em](xenevtchn){XEN $\rightarrow$ EVENT};
+\node[state,xen,below of=xenstore,xshift=5em](xenring){XS, EVENT $\rightarrow$ RING};
+\node[state,xen,below of=xenring](xennetif){XEN, RING $\rightarrow$ NETIF};
+\node[state,mir,below of=xennetif,xshift=4.5em](mirnet){NETIF $\rightarrow$ ETH};
+\node[state,mir,below of=mirnet](mirtcp){ETH $\rightarrow$ TCP};
+\node[state,mir,below of=mirtcp](cohttp){TCP $\rightarrow$ HTTP};
+\node[state,fill=gray!20,left of=cohttp,node distance=10em](myhomepage){HTTP $\rightarrow$ APP};
+\node[state,unix,right of=xenboot,node distance=12em](unixelf){UNIX};
+\node[state,unix,below of=unixelf,node distance=7em](unixturntap){UNIX $\rightarrow$ NETIF};
 
 \path (myhomepage) edge (cohttp)
       (cohttp) edge (mirtcp)
@@ -404,6 +394,16 @@ Is R1.rational the same type as R2.rational?
 % -------------------------------------------
 \begin{frame}[fragile]{Module Systems}{Features}
 \includegraphics[width=12cm]{features.pdf}
+\end{frame}
+
+% -------------------------------------------
+\begin{frame}[fragile]{More}
+\begin{itemize}
+\item blog.ezyang.com (including comments)
+\item Edward Yang's \textit{Haskell Implementor's Workshop} talk
+\item The Backpack paper
+\item papers by Derek Dreyer (e.g. MixML)
+\end{itemize}
 \end{frame}
 
 \end{document}

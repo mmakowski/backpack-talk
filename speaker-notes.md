@@ -54,6 +54,9 @@
 * Difference between backpack and ML modules: applicative vs generative semantics.
 -> Who thinks generative is more intuitive? Who thinks applicative?
 
+TODO: global uniqueness of type classes
+
+
 TODO: how is it better (Scott's comment), double-vision problem
 TODO: practical considerations: compatibility with existing Haskell code and toolchain
 * Note: take this diagram with a pinch of salt, as it only takes into account the features we discussed. For example, it might give the impression that Scala mostly subsumes ML. This is not the case, there are some more advanced features of ML modules that we have not disucssed and which cannot be accurately mapped to scala constructs.
