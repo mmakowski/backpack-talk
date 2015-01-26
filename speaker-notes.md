@@ -27,13 +27,13 @@
 * Programmers try to roll their own
 -> Exhibit 2: tagstream "functor"
 * We use data types to express signatures. A functor would be a function that takes an `IntegerSig a` and produces a `RationalSig a`.
-* TODO: what's wrong with this approach?
+* what's wrong with this approach?
     * awkward, must pass dictionary around
     * carrier types have to be made visible (why would anyone care about my representation of integer type in `RationalSig`)?
 
 -> Exhibit 3: tagsoup "functor"
 * We use type classes to describe signatures. A functor would be an instance of a type class with constraint representing the parameterising singature.
-* TODO: what's wrong with this approach?
+* what's wrong with this approach?
     * more difficult type inference
     * it is often recommended that type classes are used for abstractions that are governed by specific laws (e.g. algebraic constructs); StringLike does not have such laws and thus breaks expectations
     * forces programmer to constantly abstract over the string type and apply, even though most likely we are going to use the same string type in entire program
@@ -51,13 +51,13 @@
 * Note: here we defined signature in a separate package. In this example it would have been equally appropriate for the `rational` package to internally specify the signature it depends on.
 * Note the version we specified for signature. A given module can match multiple signatures and multiple signature versions. The version is meant to also capture semantics which can't be specified in Haskell.
 * Note that mixing-in (i.e. application of functor) happens in cabal files. I always viewed cabal as yet another build tool. Now it is clear that Cabal is actually the language for programming in-the-large. I tend to think of this as OO (e.g. Scala) having first-class modules, ML second class, and Haskell with Backpack third-class
+* So, Backpack is different from ML modules. Is it better though? One would have hoped that over three decades after ML has been conceived it is at least not worse. We have to remember, however, that it was created under severe constraints stemming from the need for full backwards compatibility with haskell language and toolchain. Still, the authors argue that Backpack has some unique advantages over ML modules. What are they?
+
 * Difference between backpack and ML modules: applicative vs generative semantics.
 -> Who thinks generative is more intuitive? Who thinks applicative?
+* Recursive modules: in ML the type in currently defined module and one qualified with the name of currently defined module (available thanks to recursion) are different -- double vision problem, dreaded by modularity theorists. Backpack's semantics completely avoid this problem -- property of mixins.
 
-TODO: global uniqueness of type classes
+* we have glossed over some of the more hairy issues: global uniqueness of type classes, open type families -- I recommend Edward's blog posts
 
-
-TODO: how is it better (Scott's comment), double-vision problem
-TODO: practical considerations: compatibility with existing Haskell code and toolchain
 * Note: take this diagram with a pinch of salt, as it only takes into account the features we discussed. For example, it might give the impression that Scala mostly subsumes ML. This is not the case, there are some more advanced features of ML modules that we have not disucssed and which cannot be accurately mapped to scala constructs.
 * Also, it does not cover entire module system design space, just the bit of it I'm familiar with.

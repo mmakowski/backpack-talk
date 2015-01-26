@@ -1,6 +1,12 @@
 [file]
 slides.pdf
 [notes]
+### 1
+* TODO: intro
+-> who is familiar with type classes?
+-> who is familiar with cabal?
+-> ML?
+-> Scala?
 ### 2
 * mirage: system for deploying application to bare metal
 * traditional software stack has large attack surface and is inefficient
@@ -9,8 +15,7 @@ slides.pdf
 * it would be inconvenient to have to run and debug an app on Xen
 * Mirage allows to develop by linking against Unix backend
 * Then linked against Xen backend for production deployment
-
-* What language is Mirage written in?
+* Peculiar: the choice of programming language
 ### 4
 -> read
 
@@ -34,19 +39,26 @@ slides.pdf
 * MyHomePage is a functor that produces an APP given a structure matching HTTP signature
 * Cohttp is a functor that produces an HTTP given TCP
 * MirNet requires NETIF to make an ETH, this can be provided either by XenNetif or by UnixTurntap
-### 9
 * One view of OO treats is as approach in which modules are first-class (i.e. can be stored, passed into and returned from functions)
+### 9
 * This is how (to some level of accuracy) one could encode ML modules in Scala
+(explain)
+
 * Major difference: in ML one did not have to declare structure matches a singature, compiler was checking that structurally
 * In scala matching is nominal -- only structures marked as matching signatures are accepted
 * more differences to do with path-dependent types vs sharing constraints
-### 10
+
 * Haskell does not have language for programming in-the-large
-* Attempt to use Haskells in-the-small features for this, often to do with different string implementations
+* Attempt to use Haskell's in-the-small features for this, often to do with different string implementations
+### 10
 * This is a record of functions parameterised by two types -- a variant of functor
+* A functor would be a function that takes an `IntegerSig a` and produces a `RationalSig a`.
+* what's wrong
+  - awkward, must pass dictionary around
+  - carrier types have to be made visible (e.g. my representation of integer type in `RationalSig`)
 ### 11
 * tagsoup uses type classes to describe signatures
-* functor would be function that takes an IntegerSig a and produces a RationalSig a
+* A functor would be an instance of a type class with constraint representing the parameterising singature.
 * what's wrong:
   - more difficult type inference
   - abuse of type classes (no laws)
@@ -54,3 +66,61 @@ slides.pdf
 
 * alternatives: duplicated code, no parametricity
 * Backpack will provide a better way: new constructs to compose modules without hackery
+### 12
+* Haskell already has modules -- this one corresponds to the structure we previously defined in ML
+### 13
+* Backpack adds signature modules
+* Only type signatures, no definitions
+
+* not sure if this will match type alias -- hard to find definitive reference!
+
+* There are no functors; how can we define new modules that depend on signatures?
+### 14
+* Modules with signature imports
+* This corresponds to RationalFun in ML
+* Integers will be provided by some module that implements IntegerSig
+
+* How can we instantiate a concrete implementation of Rational?
+* By mixing in an implementation.
+* This is done in cabal
+* we are going to have separate package for each module -- not necessary, but helps illustrate the process
+### 15
+* no surprises for standard module package
+(explain if there are people not familiar with cabal)
+### 16
+* indefinite
+* specify version -- indicates semantics
+* exposed-signatures field
+### 17
+* rational is also indefinite -- depends on a singature with "holes"
+* how do we mix things in to obtain definite package?
+### 18
+* package with no code -- just mixes other packages
+* we rename IntegerInt to IntegerSig to match the import in Rational
+  * we could have just called IntegerInt module IntegerSig, no rename would have been necessary
+* we rename Rational to indicate that it is a specific implementation (not required)
+
+* actual conventions are likely to end up differently, this is just something I made up for clarity
+### 19
+* this is what the dependency hierarchy looks like
+* dotted line indicates module matching signature
+* note no reference in integer-sig to integer-int (although one can be put in cabal file for doc purposes)
+* matching is structural!
+
+* backpack is different from ML modules. Is it better?
+* One would have hoped that over three decades after ML has been conceived it is at least not worse.
+* created under severe constraints -- full backwards compatibility with haskell language and toolchain.
+* authors argue that Backpack has some unique advantages over ML modules. What are they?
+### 20
+-> Who thinks generative is more intuitive? Who thinks applicative?
+
+* major flaw in ML modules: inability to define recursive modules
+* type in currently defined module is distinct from the type in recursively available name -- double vision
+* Backpack does not have this problem
+### 21
+* modules cannot be recursively defined, but can be recursively linked
+### 22
+* overview of features of different module systems
+* take with a pinch of salt -- only covers features we discussed
+* scala for comparison as it covers (to some level of accuracy) a lot of both approaches
+### 23
