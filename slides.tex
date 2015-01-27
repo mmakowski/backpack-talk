@@ -106,6 +106,22 @@ The compiler heavily emphasises static type checking, and the resulting binaries
 \end{frame}
 
 % -------------------------------------------
+\begin{frame}{Toy Problem}
+\makebox[\textwidth][c]{
+\begin{tikzpicture}[->,>=stealth']
+\node[state](integersig){integer interface};
+\node[state,right of=integersig,node distance=4cm](integerint){integer};
+\node[state,below of=integersig,node distance=2cm](rational){rational};
+\node[state,below of=rational,node distance=2cm,xshift=2cm](rationalint){rational based on integer};
+\path (rationalint.120) edge[out=90,in=-90] (rational)
+      (rationalint.60) edge[out=90,in=-90] (integerint)
+      (rational) edge (integersig);
+\draw[dotted,-] (integersig) -- (integerint);
+\end{tikzpicture}
+}
+\end{frame}
+
+% -------------------------------------------
 \begin{frame}[fragile]{ML Modules}{Structures}
 \begin{lstlisting}[language=ML]
 structure IntInteger =
