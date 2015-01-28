@@ -3,9 +3,11 @@ slides.pdf
 [notes]
 ### 1
 * I am not a Haskell expert, just occasionally dabbling in it
-* I am interested in tools and techniques that help in delivering better software
+* I am interested in tools and techniques that help in delivering good quality software
+* quality: easy to reaason about, easy to modify
 * Modularity/developing to interfaces
-* I perused the first sections of Backpack paper
+* Backpack paper published last year attracted my attention
+-> who does not know what Backpack is?
 * I could spread knowledge of this new tool, and learn something in the process!
 * approachable learning material rather scarce: paper, blog posts by Edward Yang
 * no implementation
@@ -16,6 +18,8 @@ slides.pdf
 ### 2
 * mirage: system for deploying application to bare metal
 * traditional software stack has large attack surface and is inefficient
+* GHOST vulnerability announced today
+- guess what it was caused by
 * Mirage unikernels have size of hundreds of kilobytes and boot up in milliseconds
 ### 3
 * it would be inconvenient to have to run and debug an app on Xen
